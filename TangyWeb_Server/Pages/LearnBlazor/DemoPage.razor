@@ -7,9 +7,12 @@
     <div class="row m-1">
         @foreach (var prod in Products)
         {
-            <_productDisplay Product="prod" 
-                             OnFavoriteUpdated="FavoriteCountUpdate" 
-                             OnItemClicked="LastItemSelectedUpdate"/>
+            <_productDisplay Product="prod"
+                             OnFavoriteUpdated="FavoriteCountUpdate"
+                             OnItemClicked="LastItemSelectedUpdate">
+                <FirstFragment>#1</FirstFragment>
+                <SecondFragment>#2</SecondFragment>
+            </_productDisplay>
         }
     </div>
 </div>
