@@ -2,18 +2,23 @@
 
 <h2 class="text-primary">DemoProduct</h2>
 <div class="border p-2 mt-2" style="background-color:azure">
-    Favorites: @_selectedFavoritesCount
+    <p>Favorites: @_selectedFavoritesCount </p><br>
+    <p>Last item selected: @_lastItemSelected </p>
     <div class="row m-1">
         @foreach (var prod in Products)
         {
-            <_productDisplay Product="prod" OnFavoriteUpdated="FavoriteCountUpdate"/>
+            <_productDisplay Product="prod" 
+                             OnFavoriteUpdated="FavoriteCountUpdate" 
+                             OnItemClicked="LastItemSelectedUpdate"/>
         }
     </div>
 </div>
 
 
 @code {
-    private int _selectedFavoritesCount { get; set; } = 0;
+    private int _selectedFavoritesCount;
+    private string _lastItemSelected;
+
     List<DemoProduct> Products = new();
 
     protected override void OnInitialized()
@@ -47,7 +52,7 @@
         });
     }
 
-    protected void FavoriteCountUpdate(bool isSelected)
+    private void FavoriteCountUpdate(bool isSelected)
     {
         if (isSelected)
         {
@@ -57,5 +62,10 @@
         {
             _selectedFavoritesCount--;
         }
+    }
+
+    private void LastItemSelectedUpdate(string itemName)
+    {
+        _lastItemSelected = itemName;
     }
 }

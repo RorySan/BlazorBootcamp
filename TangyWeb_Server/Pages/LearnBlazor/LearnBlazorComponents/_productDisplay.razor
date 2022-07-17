@@ -1,5 +1,9 @@
-<div class="bg-light border m-1 col-5">
-    <h4 class="text-secondary">Product - @Product.Id</h4>
+
+
+
+
+<div class="bg-light border m-1 col-5" @onclick="args => LastItemSelectedUpdated(args, Product.Name)">
+<h4 class="text-secondary">Product - @Product.Id</h4>
     <input type="checkbox" @onchange="FavoriteUpdated" /> Add to Favorite <br><br>
     <!-- Add to Favorites <input type="checkbox" @onchange="FavoriteUpdated" /> <br>-->
     Name - @Product.Name<br>
@@ -23,9 +27,19 @@
     
     [Parameter]
     public EventCallback<bool> OnFavoriteUpdated { get; set; }
+    
+    [Parameter]
+    public EventCallback<string> OnItemClicked { get; set; }
 
     private async Task FavoriteUpdated(ChangeEventArgs args)
     {
         await OnFavoriteUpdated.InvokeAsync((bool) args.Value);
+    }
+
+    private async Task LastItemSelectedUpdated(MouseEventArgs args, string productName)
+    {
+        <!-- esto está como ejemplo de cómo pasar los args y otro argumento, pero en realidad
+        podría hacer directamente InvokeAsync(Product.Name) y sería lo mismo -->
+        await OnItemClicked.InvokeAsync(productName);
     }
 }
