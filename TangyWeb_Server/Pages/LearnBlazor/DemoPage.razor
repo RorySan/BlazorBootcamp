@@ -1,0 +1,61 @@
+@page "/learnBlazor/DemoPage"
+
+<h2 class="text-primary">DemoProduct</h2>
+<div class="border p-2 mt-2" style="background-color:azure">
+    Favorites: @_selectedFavoritesCount
+    <div class="row m-1">
+        @foreach (var prod in Products)
+        {
+            <_productDisplay Product="prod" OnFavoriteUpdated="FavoriteCountUpdate"/>
+        }
+    </div>
+</div>
+
+
+@code {
+    private int _selectedFavoritesCount { get; set; } = 0;
+    List<DemoProduct> Products = new();
+
+    protected override void OnInitialized()
+    {
+        Products.Add(new()
+        {
+            Id = 1,
+            Name = "Midnight Blaze",
+            IsActive = false,
+            Price = 5.99,
+            ProductProperties = new()
+            {
+                new DemoProductProperties { Id = 1, Key = "Flavor", Value = "Rose"},
+                new DemoProductProperties { Id = 2, Key = "Size", Value = "20oz"},
+                new DemoProductProperties { Id = 3, Key = "Color", Value="Purple" }
+            }
+        });
+
+        Products.Add(new()
+        {
+            Id = 2,
+            Name = "Blossom Lily",
+            IsActive = true,
+            Price = 9.99,
+            ProductProperties = new()
+            {
+                new DemoProductProperties { Id = 1, Key = "Flavor", Value = "Lily" },
+                new DemoProductProperties { Id = 2, Key = "Size", Value = "18oz" },
+                new DemoProductProperties {Id = 3,Key = "Color",Value = "White"}
+            }
+        });
+    }
+
+    protected void FavoriteCountUpdate(bool isSelected)
+    {
+        if (isSelected)
+        {
+            _selectedFavoritesCount++;
+        }
+        else
+        {
+            _selectedFavoritesCount--;
+        }
+    }
+}
