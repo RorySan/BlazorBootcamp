@@ -1,12 +1,15 @@
 @page "/learnBlazor/ParentComponent"
 <h3>Parent Child Relation</h3>
+<CascadingValue Value="@MessageForGrandChild">
+    <_ChildComponent OnButtonClick="ShowMessage" Title="This title is passed as parameter from parent component">
+        <ChildContent>Render Fragment From Parent!</ChildContent>
+        <DangerChildContent>Danger content from parent</DangerChildContent>
+    </_ChildComponent>
+</CascadingValue>
 
-<_ChildComponent OnButtonClick="ShowMessage" Title="This title is passed as parameter from parent component">
-    <ChildContent>Render Fragment From Parent!</ChildContent>
-    <DangerChildContent>Danger content from parent</DangerChildContent>
-</_ChildComponent>
-
-<p><b>@messageText</b></p>
+<p>
+    <b>@messageText</b>
+</p>
 
 <_AnotherChildComponent placeholder="Enter Name From Parent"></_AnotherChildComponent>
 
@@ -15,8 +18,10 @@
 @code {
     public string messageText = "";
 
+    public string MessageForGrandChild = "This is a message from your GrandParent (ParentComponent";
     private void ShowMessage()
     {
         messageText = "Button clicked on child component";
     }
+
 }
