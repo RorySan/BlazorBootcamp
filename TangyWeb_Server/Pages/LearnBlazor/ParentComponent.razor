@@ -2,7 +2,7 @@
 <h3>Parent Child Relation</h3>
 <CascadingValue Value="@MessageForGrandChild" Name="message">
     <CascadingValue Value="@LuckyNumber" Name="luckyNumber">
-        <_ChildComponent OnButtonClick="ShowMessage" Title="This title is passed as parameter from parent component">
+        <_ChildComponent @ref="_childComp" OnButtonClick="ShowMessage" Title="This title is passed as parameter from parent component">
             <ChildContent>Render Fragment From Parent!</ChildContent>
             <DangerChildContent>Danger content from parent</DangerChildContent>
         </_ChildComponent>
@@ -15,9 +15,13 @@
 
 <_AnotherChildComponent placeholder="Enter Name From Parent"></_AnotherChildComponent>
 
+<div class="row">
+    <button class="btn btn-success" @onclick="() => _childComp.SweetSuccess()">Show SweetAlert</button>
+</div>
 <!-- <_ChildComponent Title="Another child"></_ChildComponent> -->
 
 @code {
+    private _ChildComponent _childComp;
     public string messageText = "";
 
     public string MessageForGrandChild = "This is a message from your GrandParent (ParentComponent";

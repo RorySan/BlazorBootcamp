@@ -1,3 +1,4 @@
+@inject IJSRuntime _JsRuntime;
 
 <div>
     <div class="alert alert-info">@Title</div>
@@ -36,4 +37,14 @@
     
     [Parameter]
     public EventCallback OnButtonClick { get; set; }
+    
+    public async Task ToastrSuccess()
+    {
+        await _JsRuntime.ToastrSuccess("Operation Successful");
+    }
+    
+    public async Task SweetSuccess()
+    {
+        await _JsRuntime.InvokeVoidAsync("ShowSweet", "success", "Success Title", "Success Text");
+    }
 }

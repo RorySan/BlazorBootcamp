@@ -6,3 +6,15 @@ window.ShowToastr = (type, message) => {
         toastr.error(message, "Operation Failed", {timeOut: 5000});
     }
 }
+
+window.ShowSweet = (type, title, text) => {
+
+    
+    Swal.fire({
+        icon: type,
+        title: title,
+        text: text,
+        footer: '<a href="">Why do I have this issue?</a>'
+    });
+
+}
