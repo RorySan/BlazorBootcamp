@@ -5,10 +5,10 @@ namespace Tangy_Business.Repository.IRepository;
 
 public interface ICategoryRepository
 {
-	public CategoryDTO Create(CategoryDTO objDto);
-	public CategoryDTO Update(CategoryDTO objDto);
-	public int Delete(int id);
+	public Task<CategoryDTO> Create(CategoryDTO objDto);
+	public Task<CategoryDTO> Update(CategoryDTO objDto);
+	public Task<int> Delete(int id);
 
-	public CategoryDTO Get(int id);
-	public IEnumerable<CategoryDTO> GetAll();
+	public Task<CategoryDTO> Get(int id);
+	public Task<IEnumerable<CategoryDTO>> GetAll();
 }
