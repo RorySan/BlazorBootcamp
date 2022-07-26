@@ -2,7 +2,7 @@
 @page "/category/edit/{id:int}"
 
 @inject ICategoryRepository _categoryRepository
-@inject NavigationManager _NavigationManager;
+@inject NavigationManager _navigationManager;
 
 <div class="row m-2">
     <h3 class="card-title text-primaryy mb-3 ml-3">@Title Category</h3>
@@ -79,6 +79,6 @@
         {
             await _categoryRepository.Update(Category);
         }
-        _NavigationManager.NavigateTo("category");
+        _navigationManager.NavigateTo("category");
     }
 }
