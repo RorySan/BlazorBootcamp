@@ -12,7 +12,7 @@
 <div class="row m-2">
     <h3 class="card-title text-primaryy mb-3 ml-3">@Title Product</h3>
 
-    <div class="col-10">
+    <div class="col-md-10">
         @if (IsLoading)
         {
             <div class="text-center">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <InputTextArea @bind-Value="Product.Description" class="form-control"/>
+                    <SfRichTextEditor @bind-Value="Product.Description"/>
                     <ValidationMessage For="() => Product.Description"></ValidationMessage>
                 </div>
                 <div class="row pt-3">
@@ -63,7 +63,7 @@
                         </InputSelect>
                         <ValidationMessage For="() => Product.CategoryId"></ValidationMessage>
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group pt-4 col-6">
                         <InputFile OnChange="HandleImageUpload"></InputFile>
                     </div>
 
@@ -75,6 +75,9 @@
             </EditForm>
         }
     </div>
+    <div class="col-md-2">
+        <img src="@Product.ImageUrl" class="w-100">
+    </div>
 </div>
 
 @code {
@@ -82,11 +85,15 @@
     [Parameter]
     public int Id { get; set; }
 
-    private ProductDTO Product { get; set; } = new ProductDTO();
+    private ProductDTO Product { get; set; } = new ()
+    {
+        ImageUrl = "/images/default.png"
+    };
+    
     private IEnumerable<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();
     private string Title { get; set; } = "Create";
-
     public bool IsLoading { get; set; }
+    public string OldImageUrl { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -106,6 +113,7 @@
     // update
             Title = "Update";
             Product = await _ProductRepository.Get(Id);
+            OldImageUrl = Product.ImageUrl;
         }
         IsLoading = false;
         StateHasChanged();
@@ -116,10 +124,18 @@
         if (Product.Id == 0)
         {
             await _ProductRepository.Create(Product);
+            await _JsRuntime.ToastrSuccess("Product created successfully.");
+
         }
         else
         {
+            if (OldImageUrl != Product.ImageUrl)
+            {
+                _fileUpload.DeleteFile(OldImageUrl);
+            }
+            
             await _ProductRepository.Update(Product);
+            await _JsRuntime.ToastrSuccess("Product updated successfully.");
         }
         _navigationManager.NavigateTo("product");
     }
