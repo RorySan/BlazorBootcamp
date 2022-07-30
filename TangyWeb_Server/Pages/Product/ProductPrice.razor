@@ -18,7 +18,7 @@
                 <div class="card-body">
                     <h4>@Product.Name</h4>
                     <span>Category : @Product.Category.Name</span><br/>
-                    Description : <span>@((MarkupString)Product.Description)</span>
+                    Description : <span>@((MarkupString) Product.Description)</span>
                 </div>
             </div>
             <div class="col-1">
@@ -26,20 +26,35 @@
             </div>
         </div>
         <p>grid aquí</p>
-        <SfGrid @ref="_productPriceGrid" DataSource="@ProductPrices" AllowPaging="true"
-                Toolbar="@(new List<string>{"Add", "Edit","Update", "Delete", "Cancel"})">
+        <SfGrid @ref="_productPriceGrid" DataSource="@ProductPrices" AllowPaging="true" AllowFiltering="true" AllowSorting="true"
+                Toolbar="@(new List<string> {"Add", "Edit", "Update", "Delete", "Cancel"})">
             <GridEditSettings AllowAdding="true" AllowEditing="true" ShowDeleteConfirmDialog="true" AllowDeleting="true"/>
             <GridEvents OnActionBegin="ActionHandler" TValue="ProductPriceDTO"/>
+            <GridFilterSettings Type="FilterType.Menu"/>
+            <GridSortSettings AllowUnsort="false">
+                <GridSortColumns>
+                    <GridSortColumn Field="Price" Direction="SortDirection.Ascending"></GridSortColumn>
+                </GridSortColumns>
+            </GridSortSettings>
+            <GridPageSettings PageSize="5" PageCount="5" PageSizes="true"/>
             <GridColumns>
                 <GridColumn IsPrimaryKey="true" AllowAdding="false" Field=@nameof(ProductPriceDTO.Id) HeaderText="ID"></GridColumn>
                 <GridColumn Field=@nameof(ProductPriceDTO.Size) HeaderText="Size">
                     <EditTemplate>
-                        <Syncfusion.Blazor.DropDowns.SfDropDownList 
+                        <Syncfusion.Blazor.DropDowns.SfDropDownList
                             DataSource="SizeList" TItem="string" TValue="string" TItem="string"
                             @bind-Value="((context as ProductPriceDTO).Size)"/>
                     </EditTemplate>
                 </GridColumn>
                 <GridColumn Field=@nameof(ProductPriceDTO.Price) HeaderText="Price" Format="C2"></GridColumn>
+                <GridColumn HeaderText="Manage Records" Width="150">
+                    <GridCommandColumns>
+                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() {IconCss = "e-icons e-edit", CssClass = "e-flat"})"></GridCommandColumn>
+                        <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() {IconCss = "e-icons e-delete", CssClass = "e-flat"})"></GridCommandColumn>
+                        <GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions() {IconCss = "e-icons e-update", CssClass = "e-flat"})"></GridCommandColumn>
+                        <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions() {IconCss = "e-icons e-cancel-icon", CssClass = "e-flat"})"></GridCommandColumn>
+                    </GridCommandColumns>
+                </GridColumn>
             </GridColumns>
         </SfGrid>
     }
@@ -81,13 +96,13 @@
             args.Data.ProductId = Id;
             if (args.Action == "Add")
             {
-                // creating
+    // creating
                 await _productPriceRepository.Create(args.Data);
                 ProductPrices = await _productPriceRepository.GetAll(Id);
             }
             else if (args.Action == "Edit")
             {
-                // editing
+    // editing
                 await _productPriceRepository.Update(args.Data);
             }
             await _productPriceGrid.Refresh();
@@ -98,5 +113,5 @@
             await _productPriceGrid.Refresh();
         }
     }
-}
 
+}
