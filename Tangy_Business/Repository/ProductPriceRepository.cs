@@ -28,14 +28,19 @@ public class ProductPriceRepository: IProductPriceRepository
 		return _mapper.Map<ProductPrice, ProductPriceDTO>(addedObj.Entity);
 	}
 
-	public async Task<ProductPriceDTO> Update(ProductPriceDTO objDto)
+	public async Task<ProductPriceDTO> Update(ProductPriceDTO objDTO)
 	{
-		var objFromDb = await _db.ProductPrices.FirstOrDefaultAsync(prodPrice => prodPrice.Id == objDto.Id);
-		if (objFromDb == null) return objDto;
-		var objForDb = _mapper.Map<ProductPriceDTO, ProductPrice>(objDto);
-		_db.ProductPrices.Update(objForDb);
-		await _db.SaveChangesAsync();
-		return objDto;
+		var objFromDb = await _db.ProductPrices.FirstOrDefaultAsync(u => u.Id==objDTO.Id);
+		if (objFromDb!=null)
+		{
+			objFromDb.Price = objDTO.Price;
+			objFromDb.Size = objDTO.Size;
+			objFromDb.ProductId= objDTO.ProductId;
+			_db.ProductPrices.Update(objFromDb);
+			await _db.SaveChangesAsync();
+			return _mapper.Map<ProductPrice, ProductPriceDTO>(objFromDb);
+		}
+		return objDTO;
 	}
 
 	public async Task<int> Delete(int id)

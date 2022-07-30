@@ -30,7 +30,6 @@ public class ProductRepository : IProductRepository
 	{
 		var objFromDb = await _db.Products.FirstOrDefaultAsync(u => u.Id == objDto.Id);
 		if (objFromDb == null) return objDto;
-		// You can be explicit with the properties
 		objFromDb.Name = objDto.Name;
 		objFromDb.Description = objDto.Description;
 		objFromDb.ImageUrl = objDto.ImageUrl;
@@ -38,8 +37,6 @@ public class ProductRepository : IProductRepository
 		objFromDb.Color = objDto.Color;
 		objFromDb.CustomerFavorite = objDto.CustomerFavorite;
 		objFromDb.ShopFavorite = objFromDb.ShopFavorite;
-		// Or you can pass directly objDto here:
-		// _db.Products.Update(objDto);
 		_db.Products.Update(objFromDb);
 		await _db.SaveChangesAsync();
 		return _mapper.Map<Product, ProductDTO>(objFromDb);
