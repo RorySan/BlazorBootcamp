@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using TangyWeb_Client;
@@ -14,5 +15,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 // now everytime we inject the http client we will point to our API by default
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddBlazoredLocalStorage();
 
 await builder.Build().RunAsync();
