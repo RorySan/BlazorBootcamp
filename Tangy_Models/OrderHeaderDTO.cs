@@ -42,4 +42,6 @@ public class OrderHeaderDTO
 	[Required]
 	[Display(Name = "Postal Code")]
 	public string PostalCode { get; set; }
+
+	public string Email { get; set; }
 }
