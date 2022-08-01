@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Tangy_Business.Repository.IRepository;
+using Tangy_Common;
 using Tangy_DataAccess;
 using Tangy_DataAccess.Data;
 using Tangy_DataAccess.ViewModels;
@@ -19,7 +19,7 @@ public class OrderRepository : IOrderRepository
 		_db = db;
 		_mapper = mapper;
 	}
-	
+
 	public async Task<OrderDTO> Get(int id)
 	{
 		var order = new Order
@@ -27,7 +27,7 @@ public class OrderRepository : IOrderRepository
 			OrderHeader = await _db.OrderHeaders.FirstOrDefaultAsync(header => header.Id == id),
 			OrderDetails = _db.OrderDetails.Where(detail => detail.OrderHeaderId == id)
 		};
-		
+
 		return _mapper.Map<Order, OrderDTO>(order);
 	}
 
@@ -36,7 +36,7 @@ public class OrderRepository : IOrderRepository
 		List<Order> OrderFromDb = new List<Order>();
 		IEnumerable<OrderHeader> orderHeaders = _db.OrderHeaders;
 		IEnumerable<OrderDetail> orderDetails = _db.OrderDetails;
-		
+
 		foreach (var orderHeader in orderHeaders)
 		{
 			var order = new Order
@@ -63,7 +63,7 @@ public class OrderRepository : IOrderRepository
 				orderOrderDetail.OrderHeaderId = order.OrderHeader.Id;
 				// _db.OrderDetails.Add(orderOrderDetail); we could add one by one in the loop
 			}
-			
+
 			_db.OrderDetails.AddRange(order.OrderDetails); // or all together outside
 			await _db.SaveChangesAsync();
 
@@ -91,18 +91,51 @@ public class OrderRepository : IOrderRepository
 		return _db.SaveChanges();
 	}
 
-	public Task<OrderHeaderDTO> UpdateHeader(OrderHeaderDTO headerDTO)
+	public async Task<OrderHeaderDTO> UpdateHeader(OrderHeaderDTO headerDTO)
 	{
-		throw new NotImplementedException();
+		if (headerDTO != null)
+		{
+			var orderHeader = _mapper.Map<OrderHeaderDTO, OrderHeader>(headerDTO);
+			_db.OrderHeaders.Update(orderHeader);
+			await _db.SaveChangesAsync();
+			return _mapper.Map<OrderHeader, OrderHeaderDTO>(orderHeader);
+		}
+
+		return new OrderHeaderDTO();
 	}
 
-	public Task<OrderHeaderDTO> MarkPaymentSuccessful(int id)
+	public async Task<OrderHeaderDTO> MarkPaymentSuccessful(int id)
 	{
-		throw new NotImplementedException();
+		var data = await _db.OrderHeaders.FindAsync(id);
+		if (data == null)
+		{
+			return new OrderHeaderDTO();
+		}
+
+		if (data.Status == StaticDetails.StatusPending)
+		{
+			data.Status = StaticDetails.StatusConfirmed;
+			await _db.SaveChangesAsync();
+			return _mapper.Map<OrderHeader, OrderHeaderDTO>(data);
+		}
+
+		return new OrderHeaderDTO();
 	}
 
-	public Task<bool> UpdateOrderStatus(int orderId, string status)
+	public async Task<bool> UpdateOrderStatus(int orderId, string status)
 	{
-		throw new NotImplementedException();
+		var data = await _db.OrderHeaders.FindAsync(orderId);
+		if (data == null)
+		{
+			return false;
+		}
+
+		data.Status = status;
+		if (status == StaticDetails.StatusShipped)
+		{
+			data.ShippingDate = DateTime.Now;
+		}
+		await _db.SaveChangesAsync();
+		return true;
 	}
 }
