@@ -8,4 +8,7 @@ public static class StaticDetails
 	public const string StatusShipped = "Shipped";
 	public const string StatusRefunded = "Refunded";
 	public const string StatusCancelled = "Cancelled";
+
+	public const string RoleAdmin = "Admin";
+	public const string RoleCustomer = "Customer";
 }

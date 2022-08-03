@@ -39,27 +39,30 @@
                 <span class="oi oi-list-rich" aria-hidden="true"></span> LifeCycle
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/category">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Category
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/product">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Product
-            </NavLink>
-        </div>
+        <AuthorizeView Roles="@_roleAdmin">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/category">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Category
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/product">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Product
+                </NavLink>
+            </div>
+        </AuthorizeView>
     </nav>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
+    private string _roleAdmin = Tangy_Common.StaticDetails.RoleAdmin;
+    private bool _collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string? NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+        _collapseNavMenu = !_collapseNavMenu;
     }
 
 }
